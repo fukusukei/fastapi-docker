@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  fw:
+    build: 
+      context: fw
+      dockerfile: Dockerfile
+      args:
+          - USERID=1000
+          - GROUPID=1000
+    restart: unless-stopped
+    tty: true
+    ports: 
+      - 8001:8000
+    volumes:
+      - ./volumes/fw:/home/fw/
+  db:
+    build: db
+    # read_only: true
+    restart: unless-stopped
+    volumes:
+      - ./volumes/db/var/lib/postgresql/data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - POSTGRES_USER=fauser
+      - POSTGRES_PASSWORD=fauser_password
+      - POSTGRES_DB=fastapi
